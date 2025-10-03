@@ -1,10 +1,15 @@
-import Login from "./pages/Login"
+import Login from "./components/Login.jsx" 
+import SignUp from "./components/SignUp.jsx"  
+import { Route, Routes } from "react-router-dom"
 
 function App() {
-  
-
   return (
-    <Login/>
+    <Routes>
+      <Route path="/signup" element={<SignUp/>}/>
+      <Route path="/login" element={<Login/>}/>
+      {/* Set a default route for the root path */}
+      <Route path="/" element={<SignUp/>}/> 
+    </Routes>
   )
 }
 
