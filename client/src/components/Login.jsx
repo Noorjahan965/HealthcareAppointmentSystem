@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Login() {
 	const [formData, setFormData] = useState({
@@ -9,6 +9,7 @@ function Login() {
 	});
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
+	const navigate = useNavigate();
 
 	const { email, password } = formData;
 
@@ -39,7 +40,7 @@ function Login() {
 			console.log('Login successful:', data);
 
 			// Redirect the user to a dashboard or home page
-			// navigate('/dashboard'); 
+			navigate('/dashboard'); 
 
 		} catch (err) {
 			const message = err.response?.data?.message || err.message;
