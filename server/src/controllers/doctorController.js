@@ -8,7 +8,7 @@ const getAllDoctors = asyncHandler(async(req, res) => {
             { fullName: { $regex: req.query.keyword, $options: 'i'}},
         ],
     } : {}; // No keyword ---> return all
-    const doctors = await Doctor.find({ ...keyword }).select('-userId');
+    const doctors = await Doctor.find({ ...keyword });
 
     if(doctors.length > 0){
         res.json(doctors);
@@ -16,5 +16,15 @@ const getAllDoctors = asyncHandler(async(req, res) => {
         res.json([]);
     }
 });
+const getDoctorDetailsById = asyncHandler(async (req, res) => {
+    const userId = req.params.userId;
+    const doctor = await Doctor.findOne({ userId: userId});
 
-export { getAllDoctors }
+    if (doctor) {
+        res.json(doctor);
+    } else {
+        res.status(404).json({ message: 'Doctor profile not found.'});
+    }
+});
+
+export { getAllDoctors, getDoctorDetailsById }
