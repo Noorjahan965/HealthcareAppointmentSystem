@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom"
 import Dashboard from "./pages/Dashboard.jsx"
 import BookAppointment from "./pages/BookAppointment.jsx"
 import MyAppointments from "./pages/MyAppointments.jsx"
+import Profile from "./pages/Profile.jsx"
 
 function App() {
 	return (
@@ -14,6 +15,7 @@ function App() {
 			<Route path="/dashboard" element={<Dashboard />} />
 			<Route path="/book-appointment/:doctorId" element={<BookAppointment/>} />
 			<Route path="/my-appointments" element={<MyAppointments/>} />
+			<Route path="/profile" element={<Profile/>} />
 
 
 			{/* Set a default route for the root path */}
