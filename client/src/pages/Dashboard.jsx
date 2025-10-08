@@ -2,14 +2,19 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar.jsx'; 
+import { FaBars } from 'react-icons/fa'; // 🚨 NEW: Import the hamburger icon
 
 function Dashboard() {
-   
+    
     const [userName, setUserName] = useState('');
     const [searchKeyword, setSearchKeyword] = useState('');
     const [doctors, setDoctors] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    // 🚨 NEW: State for sidebar visibility
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
     const navigate = useNavigate();
 
@@ -46,23 +51,34 @@ function Dashboard() {
         fetchDoctors(searchKeyword);
     };
 
-   
+    
     return (
         <div className="min-h-screen bg-gray-50">
             
-           
-            <Sidebar userName={userName} /> 
-
+            {/* 🚨 NEW: Hamburger Button (Visible only on small screens) */}
+            <button
+                className="fixed top-4 left-4 z-50 p-2 bg-pink-600 text-white rounded-md lg:hidden"
+                onClick={toggleSidebar}
+            >
+                <FaBars className="w-6 h-6" /> 
+            </button>
             
-            <main className="ml-64 p-8"> 
+            {/* Sidebar - Passing new props */}
+            <Sidebar 
+                userName={userName} 
+                isOpen={isSidebarOpen} // 🚨 NEW PROP
+                toggleSidebar={toggleSidebar} // 🚨 NEW PROP
+            /> 
+
+            {/* Main Content - Updated with responsive margin */}
+            <main className="ml-0 lg:ml-64 p-4 sm:p-8"> 
                 
-                
-                <header className="mb-8">
+                <header className="mb-8 mt-12 lg:mt-0"> {/* Adjust mt-12 for mobile space */}
                     <h1 className="text-3xl font-bold text-gray-800">Welcome to HealthConnect</h1>
                     <p className="text-lg text-gray-500">Find your ideal healthcare professional.</p>
                 </header>
 
-                {/* Search Section */}
+                {/* ... Search Section ... */}
                 <section className="bg-white p-6 rounded-xl shadow-md mb-8">
                     <h2 className="text-xl font-semibold mb-4 text-pink-600">Search</h2>
                     <form onSubmit={handleSearch}>
@@ -73,11 +89,10 @@ function Dashboard() {
                             onChange={(e) => setSearchKeyword(e.target.value)}
                             className="w-full p-3 border-2 border-pink-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
                         />
-                        
                     </form>
                 </section>
                 
-               
+                {/* ... Doctor Cards Section ... */}
                 <section>
                     {loading && <p className="text-center text-pink-500">Loading doctors...</p>}
                     {error && <p className="text-red-500 font-medium text-center">{error}</p>}
@@ -92,9 +107,7 @@ function Dashboard() {
                         {doctors.map(doctor => (
                             <div key={doctor._id} className="bg-white p-6 rounded-xl shadow-lg border-t-4 border-pink-500">
                                 
-                                
                                 <h3 className="text-2xl font-bold text-gray-800 mb-2">{doctor.fullName}</h3>
-                                
                                 
                                 <div className="text-gray-600 space-y-1 pl-4 border-l-4 border-gray-200">
                                     <p><span className="font-semibold text-pink-600">Specialty:</span> {doctor.specialization}</p>
@@ -103,8 +116,8 @@ function Dashboard() {
                                     <p><span className="font-semibold">Next Available:</span> {doctor.timings[0] || 'Check Schedule'}</p>
                                 </div>
                                 
-                               
                                 <button
+                                    onClick={() => navigate(`/book-appointment/${doctor.userId}`)}
                                     className="mt-4 bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition duration-150 font-semibold shadow-md">
                                     Book Appointment
                                 </button>
